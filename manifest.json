@@ -1,0 +1,12 @@
+{
+    "content_scripts": [ {
+        "include_globs": [ "http://*.1kibaku.jp/*" ,"http://*.3gokushi.jp/*"],
+        "js": [ "script.js" ],
+        "matches": ["http://*.1kibaku.jp/*" ,"http://*.3gokushi.jp/*"]
+     } ],
+     "background_page": "background.html",
+     "description": "ブラウザ三国志 Ajax施設建設 by 浮浪プログラマ",
+     "name": "bro3_ajax_fac",
+     "permissions": [ "http://*/*" ,"https://*/*"],
+     "version": "0.1.7"
+}

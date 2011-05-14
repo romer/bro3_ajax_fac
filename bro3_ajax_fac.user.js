@@ -3,7 +3,7 @@
 // @namespace      froo
 // @include        http://*.3gokushi.jp/village.php*
 // @include        http://*.1kibaku.jp/village.php*
-// @require        http://ajax.googleapis.com/ajax/libs/jquery/1.2.6/jquery.js
+// @require        http://ajax.googleapis.com/ajax/libs/jquery/1.6.0/jquery.js
 // @description    ブラウザ三国志 Ajax施設建設 by 浮浪プログラマ
 // ==/UserScript==
 
@@ -35,7 +35,7 @@
 	VERSION = "0.1.7";
 	
 	//mixi鯖障害回避用: 広告iframe内で呼び出されたら無視
-	var container = document.evaluate('//*[@id="container"]',
+	var container = document.evaluate('id("container")',
 		document, null, XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE, null);
 	if (container.snapshotLength == 0) return;
 	
