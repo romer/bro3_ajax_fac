@@ -3,7 +3,7 @@
 // @namespace      froo
 // @include        http://*.3gokushi.jp/village.php*
 // @include        http://*.1kibaku.jp/village.php*
-// @require        http://ajax.googleapis.com/ajax/libs/jquery/1.6.0/jquery.js
+// @require        http://ajax.googleapis.com/ajax/libs/jquery/1.6.0/jquery.min.js
 // @description    ブラウザ三国志 Ajax施設建設 by 浮浪プログラマ
 // ==/UserScript==
 
@@ -30,12 +30,12 @@
 */
 
 "use strict";
-(function ($) {
+(function ($,unsafeWindow) {
     var VERSION, LOADING_ANIME;
     VERSION = "0.1.7";
     
     //mixi鯖障害回避用: 広告iframe内で呼び出されたら無視
-    var container = document.evaluate('//*[@id="container"]',
+    var container = document.evaluate('id("container")',
         document, null, XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE, null);
     if (container.snapshotLength == 0) return;
     
@@ -88,7 +88,7 @@
             }
         }, 0);
     }
-
+    
     // レベルアップリクエスト送信(Ajax)
     function sendLvupRequest(query, times) {
         var lvupUrl, mapX, mapY, mapIdx;
@@ -140,12 +140,19 @@
         }
         $("#actionLogBase").load(lvupUrl + " #actionLog", 
             function (i) {
-                return function () {
-                    if (unsafeWindow.count_down_timer) {
+                return function (html) {
+                    // 取得したHTMLからbodyのonloadを抜き出す
+                    var onloadMatch = $('<div>').html(html.replace(/<(\/)?body/,'<$1div')).find('div[onload]').first().attr('onload').match(/startArray\s*\(([\[|\d,\]]+)/);
+                    var countDownData = null;
+                    if (onloadMatch) {
+                        countDownData = onloadMatch[1];
+                    }
+                    
+                    if (typeof unsafeWindow.count_down_timer === 'object') {
                         unsafeWindow.count_down_timer.stop();
                     }
-                    $("#loadingMap" + i).remove();
                     
+                    $("#loadingMap" + i).remove();
                     // タイマーツールに反映
                     updateTimer();
                 };
@@ -160,9 +167,9 @@
         $("#lvupItem" + index)
             .addClass("lvupItem")
             .attr({ 
-                title: "施設の建設を指示します: " + query,
-                innerHTML: label
+                title: "施設の建設を指示します: " + query
             })
+            .text(label)
             .unbind("click")
             .one("click", 
                 function (q, t) {
@@ -285,23 +292,23 @@
             "</div>");
         $("#ajaxFacMenu")
             .hide()
-            .css({ 
-                position: "absolute", 
-                backgroundColor: "white", 
-                border: "solid 1px darkgray", 
-                padding: "3px", 
-                zIndex: 999
+            .css({
+                'position': "absolute", 
+                'background-color': "white", 
+                'border': "solid 1px darkgray", 
+                'padding': "3px", 
+                'z-index': 999
             });
         $("#versionLink")
             .attr({ 
                 title: "ツール公開ページを表示します",
                 target: "_blank",
                 href: "http://blog.livedoor.jp/froo/archives/51568772.html",
-                innerHTML: "Ver." + VERSION
             })
+            .text("Ver." + VERSION)
             .css({
-                color: "gray",
-                fontSize: "10px"
+                'color': "gray",
+                'font-size': "10px"
             });
         
         // メニュー行CSS
@@ -326,10 +333,8 @@
                 openMenu(this, event.pageX, event.pageY);
                 
                 // デフォルトのメニューは非表示
-                event.preventDefault();
                 return false;
             });
     }
-    
     main();
-})(jQuery);
+})(jQuery,typeof unsafeWindow === 'object' ? unsafeWindow : window);
