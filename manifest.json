@@ -1,7 +1,7 @@
 {
     "content_scripts": [ {
         "include_globs": [ "http://*.1kibaku.jp/*" ,"http://*.3gokushi.jp/*"],
-        "js": [ "script.js" ],
+        "js": ["jquery-1.6.1.min.js", "bro3_ajax_fac.user.js" ],
         "matches": ["http://*.1kibaku.jp/*" ,"http://*.3gokushi.jp/*"]
      } ],
      "background_page": "background.html",
