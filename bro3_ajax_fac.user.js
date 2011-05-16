@@ -89,6 +89,42 @@
         }, 0);
     }
     
+    function setCountDownTimer(downTimesArray,timeLag) {
+        if (!(downTimesArray instanceof Array)) {
+            return;
+        }
+        
+        var timerCache = [],timerId;
+        $(downTimesArray).each(function(index,time){
+            if (!timerCache[index]) {
+                timerCache[index] = {'doc':$('#area_timer'+index),'time':Math.round(time - timeLag / 1000)};
+             }
+        });
+        
+        if (timerId) {
+            window.clearInterval (timerId);
+        }
+        
+        timerId = window.setInterval(function(){
+            $(timerCache).each(function (index, tc) {
+                tc.time -= 1;
+                
+                if (tc.time <= 0) {
+                    window.clearInterval (timerId);
+                    window.location.replace(window.location.pathname);
+                    return;
+                }
+                
+                var t = tc.time, n = 60, h = ~~(t / (n*n)), s = t % n, m = (t - h * n * n - s) / n;
+                h = h < 100 ? String(h+100).substr(1) : String(h);
+                m = String(m);
+                s = String(s);
+                tc.doc.text(h+':'+m+':'+s);
+            });
+        },1000);
+        
+    }
+    
     // レベルアップリクエスト送信(Ajax)
     function sendLvupRequest(query, times) {
         var lvupUrl, mapX, mapY, mapIdx;
@@ -134,6 +170,8 @@
                 opacity: 0.6
             });
         
+        var now = new Date();
+        
         // Ajax通信実行
         if (times === 2) {
             $.get(lvupUrl);
@@ -143,10 +181,8 @@
                 return function (html) {
                     // 取得したHTMLからbodyのonloadを抜き出す
                     var onloadMatch = $('<div>').html(html.replace(/<(\/)?body/,'<$1div')).find('div[onload]').first().attr('onload').match(/startArray\s*\(([\[|\d,\]]+)/);
-                    var countDownData = null;
-                    if (onloadMatch) {
-                        countDownData = onloadMatch[1];
-                    }
+                    var countDownArray = onloadMatch ? JSON.parse(onloadMatch[1]) : null;
+                    setCountDownTimer(countDownArray,(new Date().getTime() - now.getTime()));
                     
                     if (typeof unsafeWindow.count_down_timer === 'object') {
                         unsafeWindow.count_down_timer.stop();

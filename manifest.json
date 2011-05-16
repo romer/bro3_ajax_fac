@@ -1,11 +1,12 @@
 {
     "content_scripts": [ {
-        "include_globs": [ "http://*.1kibaku.jp/*" ,"http://*.3gokushi.jp/*"],
+        "include_globs": [ "http://*.1kibaku.jp/village.php*" ,"http://*.3gokushi.jp/village.php*"],
         "js": ["jquery.min.js", "bro3_ajax_fac.user.js"],
-        "matches": ["http://*.1kibaku.jp/*" ,"http://*.3gokushi.jp/*"]
+        "matches": [ "http://*.1kibaku.jp/*" ,"http://*.3gokushi.jp/*"],
+        "all_frames" : true
     } ],
     "description": "ブラウザ三国志 Ajax施設建設 by 浮浪プログラマ",
     "name": "bro3_ajax_fac",
-    "permissions": [ "http://*.1kibaku.jp/village.php*" ,"https://*.3gokushi.jp/village.php*"],
+    "permissions": [ "http://*.1kibaku.jp/*" ,"http://*.3gokushi.jp/*"],
     "version": "0.1.7"
 }
