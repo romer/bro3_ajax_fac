@@ -2,7 +2,7 @@
     "content_scripts": [ {
         "include_globs": [ "http://*.1kibaku.jp/village.php*" ,"http://*.3gokushi.jp/village.php*"],
         "js": ["jquery.min.js", "bro3_ajax_fac.user.js"],
-        "matches": [ "http://*.1kibaku.jp/*" ,"http://*.3gokushi.jp/*"],
+        "matches": [ "http://*.1kibaku.jp/village.php*" ,"http://*.3gokushi.jp/village.php*"],
         "all_frames" : true
     } ],
     "description": "ブラウザ三国志 Ajax施設建設 by 浮浪プログラマ",
